@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../server/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  displayName  String
+  email        String?  @unique
+  passwordHash String?
+  // هش SHA-256 اثرانگشت دستگاه؛ به‌تنهایی برای احراز هویت حساب ثبت‌شده کافی نیست
+  fingerprint  String   @unique
+  isRegistered Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  scores       Score[]
+  sessions     GameSession[]
+  mixSessions  MixSession[]
+  achievements UserAchievement[]
+  xpLog        XpLog[]
+  streak       UserStreak?
+  dailyChallenges DailyChallengeCompletion[]
+}
+
+model Score {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId     String
+  rawScore   Int
+  accuracy   Float
+  duration   Int // میلی‌ثانیه
+  difficulty Int
+  createdAt  DateTime @default(now())
+
+  @@index([gameId, createdAt])
+  @@index([userId, gameId])
+  @@index([createdAt])
+}
+
+model GameSession {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId     String
+  startedAt  DateTime  @default(now())
+  endedAt    DateTime?
+  finalScore Int?
+  rounds     Int?
+}
+
+model MixSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameIds    String[]
+  totalScore Int      @default(0)
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([totalScore])
+}
+
+model XpLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String // game_score | streak_bonus | achievement | daily_challenge
+  gameId    String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model UserStreak {
+  userId        String    @id
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastPlayDate  DateTime?
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  unlockedAt    DateTime @default(now())
+
+  @@unique([userId, achievementId])
+}
+
+model DailyChallengeCompletion {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId String
+  day    String // YYYY-MM-DD به وقت تهران
+
+  @@unique([userId, gameId, day])
+}
+
+// ---- بانک‌های محتوا (توسط seed یا بانک شخصی کاربر پر می‌شوند) ----
+
+model Word {
+  id   Int    @id @default(autoincrement())
+  text String @unique
+}
+
+model CategoryWord {
+  id       Int    @id @default(autoincrement())
+  text     String @unique
+  category String // animal | plant | city | object | food
+
+  @@index([category])
+}
+
+model WordPair {
+  id        Int     @id @default(autoincrement())
+  a         String
+  b         String
+  isAntonym Boolean
+  level     Int     @default(1) // ۱ رایج، ۲ متوسط، ۳ ادبی
+
+  @@unique([a, b])
+  @@index([level])
+}
+
+model Proverb {
+  id     Int    @id @default(autoincrement())
+  text   String @unique // با نشانگر ___ برای بخش حذف‌شده
+  answer String
+  level  Int    @default(1) // ۱ بسیار رایج، ۲ متوسط، ۳ کمتر شناخته‌شده
+
+  @@index([level])
+}
+
+// گروه هم‌دسته برای «کلمهٔ مزاحم»؛ کلمهٔ مزاحم از گروه دیگری انتخاب می‌شود:
+// آسان = خانوادهٔ متفاوت (میوه/حیوان)، سخت = همان خانواده (ابزار آشپزی/ابزار تمیزکاری)
+model OddGroup {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  family  String
+  members String[]
+
+  @@index([family])
+}

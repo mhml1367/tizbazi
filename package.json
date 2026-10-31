@@ -1,0 +1,48 @@
+{
+  "name": "tizbazi",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "prisma generate && nuxt prepare",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write app server shared tests scripts prisma/seed.ts *.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^1.0.3",
+    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.14",
+    "lucide-vue-next": "^1.0.0",
+    "nuxt": "^4.6.3",
+    "pg": "^8.23.1",
+    "pinia": "^4.1.0",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@playwright/test": "^1.64.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/pg": "^8.23.1",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.10",
+    "prisma": "^7.10.1",
+    "tsx": "^4.23.15",
+    "vitest": "^5.0.5"
+  }
+}
