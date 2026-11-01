@@ -6,10 +6,14 @@ interface Options<R> {
   seconds: (d: 1 | 2 | 3) => number
   /** آیا پاسخ کاربر برای این دور درست است؟ */
   judge: (round: R, choice: unknown) => boolean
-  /** تغییر امتیاز: ok و ثانیه‌های باقی‌مانده */
-  delta: (ok: boolean, secondsLeft: number) => number
+  /** تغییر امتیاز: ok، ثانیه‌های باقی‌مانده و خود دور */
+  delta: (ok: boolean, secondsLeft: number, round: R) => number
   /** سقف زمان کل بازی (ثانیه)، اختیاری */
   totalSeconds?: number
+  /** ساخت دورها در کلاینت (به‌جای دریافت از /api/games/rounds) */
+  build?: (d: 1 | 2 | 3) => R[] | Promise<R[]>
+  /** مکث پس از پاسخ برای نشان دادن جواب درست (میلی‌ثانیه) */
+  revealMs?: number
 }
 
 /** بازی‌های «سؤال با تایمر و چند گزینه»: بارگذاری دورها از سرور، تایمر هر دور، امتیازدهی و ذخیره */
@@ -25,6 +29,8 @@ export function useRoundGame<R>(o: Options<R>) {
   const totalLeft = ref(o.totalSeconds ?? 0)
   const flashState = ref<'good' | 'bad' | ''>('')
   const loadError = ref('')
+  /** پاسخ انتخاب‌شده در دورِ در حال نمایش جواب (برای رنگ‌کردن گزینه‌ها) */
+  const revealed = ref<{ choice: unknown; ok: boolean } | null>(null)
 
   let roundStart = 0
   let gameStart = 0
@@ -39,8 +45,9 @@ export function useRoundGame<R>(o: Options<R>) {
   async function start() {
     loadError.value = ''
     try {
-      const res = await $fetch<{ rounds: R[] }>(`/api/games/rounds/${o.gameId}`, { query: { difficulty: difficulty.value } })
-      rounds.value = res.rounds
+      rounds.value = o.build
+        ? await o.build(difficulty.value)
+        : (await $fetch<{ rounds: R[] }>(`/api/games/rounds/${o.gameId}`, { query: { difficulty: difficulty.value } })).rounds
     } catch (e: any) {
       loadError.value = e?.data?.statusMessage || 'بارگذاری بازی انجام نشد'
       return
@@ -61,6 +68,7 @@ export function useRoundGame<R>(o: Options<R>) {
   }
 
   function tick() {
+    if (revealed.value) return // در حال نمایش جواب؛ زمان متوقف است
     const left = o.seconds(difficulty.value) - (Date.now() - roundStart) / 1000
     secondsLeft.value = Math.max(0, left)
     if (o.totalSeconds) {
@@ -71,12 +79,22 @@ export function useRoundGame<R>(o: Options<R>) {
   }
 
   function answer(choice: unknown) {
-    if (phase.value !== 'playing' || !round.value) return
+    if (phase.value !== 'playing' || !round.value || revealed.value) return
     const ok = choice !== undefined && o.judge(round.value, choice)
     if (ok) correct.value++
-    score.value = Math.max(0, score.value + o.delta(ok, secondsLeft.value))
+    score.value = Math.max(0, score.value + o.delta(ok, secondsLeft.value, round.value))
     flashState.value = ok ? 'good' : 'bad'
     setTimeout(() => (flashState.value = ''), 250)
+    if (o.revealMs) {
+      revealed.value = { choice, ok }
+      setTimeout(() => {
+        revealed.value = null
+        advance()
+      }, o.revealMs)
+    } else advance()
+  }
+
+  function advance() {
     idx.value++
     if (idx.value >= rounds.value.length) return end()
     beginRound()
@@ -88,5 +106,5 @@ export function useRoundGame<R>(o: Options<R>) {
     finish({ rawScore: score.value, accuracy: accuracy.value, duration: Date.now() - gameStart })
   }
 
-  return { ...flow, rounds, idx, round, score, correct, secondsLeft, totalLeft, flashState, loadError, accuracy, start, answer }
+  return { ...flow, rounds, idx, round, score, correct, secondsLeft, totalLeft, flashState, loadError, accuracy, revealed, start, answer }
 }

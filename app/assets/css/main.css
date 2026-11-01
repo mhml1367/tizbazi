@@ -145,3 +145,67 @@ button:disabled {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ───── کلاس‌های مشترک صفحه‌های بازی ───── */
+.game-wrap {
+  max-width: 600px;
+  margin-inline: auto;
+}
+.game-pad {
+  padding: var(--sp-5);
+  text-align: center;
+}
+.game-count {
+  font-size: 96px;
+  font-weight: 900;
+  color: var(--accent);
+}
+.game-play {
+  transition: box-shadow 200ms var(--ease);
+}
+.game-play.good {
+  box-shadow: 0 0 0 3px var(--success);
+}
+.game-play.bad {
+  box-shadow: 0 0 0 3px var(--danger);
+}
+.opt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+.opt-grid.single {
+  grid-template-columns: 1fr;
+}
+.opt-btn {
+  min-height: 56px;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface-hi);
+  color: var(--text-hi);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.8;
+  transition:
+    transform 120ms var(--ease),
+    border-color 120ms var(--ease);
+}
+.opt-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.opt-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.opt-btn.right {
+  border-color: var(--success);
+  background: color-mix(in oklch, var(--success) 18%, var(--surface-hi));
+}
+.opt-btn.wrong {
+  border-color: var(--danger);
+  background: color-mix(in oklch, var(--danger) 18%, var(--surface-hi));
+}
+.muted {
+  color: var(--text-mid);
+}

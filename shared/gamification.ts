@@ -46,7 +46,7 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'streak-7', title: 'پشت‌هم‌پشت', description: 'streak ۷ روزه' },
   { id: 'streak-30', title: 'ماه‌استوار', description: 'streak ۳۰ روزه' },
   { id: 'mind-awake', title: 'ذهن بیدار', description: '۱۰۰۰ امتیاز در یک بازی' },
-  { id: 'all-rounder', title: 'همه‌کاره', description: 'هر ۱۰ بازی را حداقل یک‌بار بازی کردی' },
+  { id: 'all-rounder', title: 'همه‌کاره', description: 'دست‌کم ۱۰ بازی متفاوت را بازی کردی' },
   { id: 'speedster', title: 'سرعت‌سنج', description: 'پاسخ درست زیر ۳ ثانیه در استروپ' },
   { id: 'hard-worker', title: 'سخت‌کوش', description: '۱۰۰ بازی انجام دادی' },
   { id: 'leader', title: 'صدرنشین', description: 'اول شدن در لیدربورد هفتگی' }

@@ -22,6 +22,9 @@ export async function recordScore(userId: string, input: ScoreInput) {
 
   return prisma.$transaction(async (tx) => {
     const { fastestCorrectMs, ...scoreData } = input
+    // بهترین امتیاز قبلی همین بازی (برای واکنش «رکورد جدید» در صفحهٔ نتیجه)
+    const prev = await tx.score.aggregate({ where: { userId, gameId: input.gameId }, _max: { rawScore: true } })
+    const prevBest = prev._max.rawScore
     await tx.score.create({ data: { userId, ...scoreData } })
     await tx.xpLog.create({ data: { userId, amount: input.rawScore, reason: 'game_score', gameId: input.gameId } })
     let xpGained = input.rawScore
@@ -96,6 +99,8 @@ export async function recordScore(userId: string, input: ScoreInput) {
       level: levelFromXp(totalXp),
       streak: st.current,
       daily: { badge: dailyBadge, allDone: dailyAll },
+      /** prevBest: null یعنی اولین بار است که این بازی ثبت می‌شود */
+      record: { prevBest, isNew: prevBest !== null && input.rawScore > prevBest },
       newAchievements: ACHIEVEMENTS.filter((a) => fresh.includes(a.id))
     }
   })

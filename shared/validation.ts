@@ -44,9 +44,47 @@ export const GAME_IDS = [
   'synonym-antonym',
   'proverb',
   'odd-one-out',
-  'reverse-memory'
+  'reverse-memory',
+  // بازی‌های با ریشهٔ ایرانی
+  'word-of-day',
+  'esm-famil',
+  'mosha-ere',
+  'riddle',
+  'morris',
+  'chess-puzzle',
+  // تمرین‌های ذهنی با حال‌وهوای ایرانی
+  'bazaar',
+  'mental-calendar',
+  'iran-map',
+  'tile-memory',
+  'word-chain',
+  'code-breaker'
 ] as const
 export type GameId = (typeof GAME_IDS)[number]
+
+/** گروه‌بندی بازی‌ها برای صفحهٔ اصلی */
+export const GAME_GROUPS: { id: string; games: GameId[] }[] = [
+  {
+    id: 'classic',
+    games: [
+      'stroop',
+      'missing-letter',
+      'chain-calc',
+      'quick-math',
+      'sequence-memory',
+      'quick-category',
+      'synonym-antonym',
+      'proverb',
+      'odd-one-out',
+      'reverse-memory'
+    ]
+  },
+  { id: 'iranian', games: ['word-of-day', 'esm-famil', 'mosha-ere', 'riddle', 'morris', 'chess-puzzle'] },
+  { id: 'iranian-mind', games: ['bazaar', 'mental-calendar', 'iran-map', 'tile-memory', 'word-chain', 'code-breaker'] }
+]
+
+/** بازی‌هایی که در «بازی تصادفی» نمی‌آیند: کلمه‌روز روزی یک‌بار است و دوز یک بازی طولانی است */
+export const MIX_EXCLUDED: GameId[] = ['word-of-day', 'morris']
 
 export const scoreSchema = z.object({
   gameId: z.enum(GAME_IDS),

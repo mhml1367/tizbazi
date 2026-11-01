@@ -9,6 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.js'
+export type * from './models/DailyPuzzle.js'
+export type * from './models/ContentItem.js'
 export type * from './models/Score.js'
 export type * from './models/GameSession.js'
 export type * from './models/MixSession.js'

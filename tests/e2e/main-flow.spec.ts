@@ -54,11 +54,19 @@ test('ورود مهمان، بازی، ذخیرهٔ امتیاز و لیدربو
   await expect(page.locator('.ach:not(.locked)', { hasText: 'اولین قدم' })).toBeVisible()
 })
 
-test('بازی تصادفی: شروع جلسهٔ ترکیبی با بازی متمایز', async ({ page }) => {
+/** ورود مهمان و صبر تا پایان ورود (پس از ورود به صفحهٔ اصلی می‌رود و نام در سربرگ دیده می‌شود) */
+async function loginGuest(page: Page, prefix: string) {
+  const name = `${prefix} ${Date.now().toString().slice(-6)}`
   await page.goto('/login')
-  await page.getByRole('textbox').fill(`ترکیب ${Date.now().toString().slice(-6)}`)
+  await page.getByRole('textbox').fill(name)
   await page.getByRole('button', { name: 'ادامه' }).click()
-  await page.goto('/')
+  await expect(page).not.toHaveURL(/\/login/)
+  await expect(page.getByText(name)).toBeVisible()
+  return name
+}
+
+test('بازی تصادفی: شروع جلسهٔ ترکیبی با بازی متمایز', async ({ page }) => {
+  await loginGuest(page, 'ترکیب')
   await page.getByRole('button', { name: /بازی تصادفی/ }).click()
   await expect(page).toHaveURL(/\/games\/[a-z-]+$/)
   const mix = await page.evaluate(() => JSON.parse(sessionStorage.getItem('tiz_mix') ?? 'null'))
@@ -73,4 +81,15 @@ test('تم تیره با ماندگاری در localStorage', async ({ page }) =
   const t = await page.evaluate(() => localStorage.getItem('tiz_theme'))
   await page.reload()
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe(t)
+})
+
+test('کلمه‌روز: تایپ با صفحه‌کلید روی صفحه و علامت‌گذاری حدس', async ({ page }) => {
+  await loginGuest(page, 'کلمه')
+  await page.goto('/games/word-of-day')
+  await page.getByRole('tab', { name: 'تمرین' }).click()
+  for (const ch of 'باران') await page.locator('.kbd .key', { hasText: new RegExp(`^${ch}$`) }).click()
+  await page.getByRole('button', { name: 'ثبت' }).click()
+  const first = page.locator('.grid .row').first().locator('.cell')
+  await expect(first).toHaveCount(5)
+  for (let i = 0; i < 5; i++) await expect(first.nth(i)).toHaveClass(/\b(g|y|b)\b/)
 })

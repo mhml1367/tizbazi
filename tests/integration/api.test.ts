@@ -121,6 +121,23 @@ describe('امتیاز', () => {
     const best = (await c.call('GET', '/api/scores/best')).json.best
     expect(best).toEqual([{ gameId: 'quick-math', best: 70, played: 1 }])
   })
+
+  itLive(
+    'رکورد شخصی: اولین بار prevBest=null، بعد فقط امتیاز بالاتر رکورد است',
+    async () => {
+      const c = new Client()
+      await c.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
+      const save = async (n: number) => {
+        const r = await c.call('POST', '/api/scores', score('stroop', n))
+        await new Promise((res) => setTimeout(res, 3100)) // محدودیت نرخ
+        return r.json.record
+      }
+      expect(await save(10)).toEqual({ prevBest: null, isNew: false })
+      expect(await save(8)).toEqual({ prevBest: 10, isNew: false })
+      expect(await save(15)).toEqual({ prevBest: 10, isNew: true })
+    },
+    20_000
+  )
 })
 
 describe('لیدربورد و گیمیفیکیشن', () => {
@@ -201,5 +218,79 @@ describe('بازی ترکیبی', () => {
     const other = new Client()
     await other.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
     expect((await other.call('POST', '/api/games/mix/complete', { id: mix.id })).status).toBe(404)
+  })
+})
+
+describe('بازی‌های ایرانی (APIهای سرور)', () => {
+  itLive('کلمه‌روز: جواب پنهان، اعتبارسنجی حدس، سقف ۶ حدس و ثبت امتیاز توسط سرور', async () => {
+    const c = new Client()
+    await c.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
+    const p = (await c.call('GET', '/api/games/word-of-day?mode=practice&fresh=1')).json
+    expect(p.answer).toBeNull()
+    expect(p.rows).toHaveLength(0)
+
+    expect((await c.call('POST', '/api/games/word-of-day/guess', { mode: 'practice', guess: 'سیب' })).status).toBe(400)
+    expect((await c.call('POST', '/api/games/word-of-day/guess', { mode: 'practice', guess: 'ززززز' })).status).toBe(422)
+
+    let last: any
+    for (const g of ['ستاره', 'آسمان', 'پرنده', 'کبوتر', 'گیلاس', 'بادام']) {
+      last = (await c.call('POST', '/api/games/word-of-day/guess', { mode: 'practice', guess: g })).json
+      if (last.finished) break
+    }
+    expect(last.finished).toBe(true)
+    expect(typeof last.answer).toBe('string') // جواب فقط پس از پایان
+    expect(last.reward).not.toBeNull()
+    // معمای تمام‌شده حدس بیشتری نمی‌پذیرد
+    expect((await c.call('POST', '/api/games/word-of-day/guess', { mode: 'practice', guess: 'باران' })).status).toBe(409)
+    // روزانه برای همه یکسان است: دو کاربر، یک جواب (پس از پایان مقایسه نمی‌کنیم؛ فقط وجود وضعیت)
+    expect((await c.call('GET', '/api/games/word-of-day?mode=daily')).json.mode).toBe('daily')
+  })
+
+  itLive('اسم‌فامیل: تأیید با بانک، کلمهٔ واقعی با امتیاز کمتر، حرف اشتباه صفر', async () => {
+    const c = new Client()
+    await c.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
+    const r = (
+      await c.call('POST', '/api/games/esm-famil/check', { letter: 'س', answers: { animal: 'سگ', name: 'سنگ', city: 'مشهد', food: '' } })
+    ).json
+    const by = Object.fromEntries(r.results.map((x: any) => [x.category, x]))
+    expect(by.animal).toMatchObject({ status: 'verified', points: 10 })
+    expect(by.name).toMatchObject({ status: 'word', points: 3 })
+    expect(by.city).toMatchObject({ status: 'wrong-letter', points: 0 })
+    expect(by.food.status).toBe('empty')
+    expect(r.total).toBe(13)
+    expect((await c.call('POST', '/api/games/esm-famil/check', { letter: 'ژ', answers: {} })).status).toBe(400) // حرف خارج از فهرست
+  })
+
+  itLive('زنجیرهٔ کلمات: کلمهٔ شروع، رد حرف اشتباه/تکراری، پاسخ رایانه با حرف درست', async () => {
+    const c = new Client()
+    await c.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
+    const start = (await c.call('POST', '/api/games/word-chain', { difficulty: 1, history: [] })).json.reply as string
+    expect(start.length).toBeGreaterThanOrEqual(3)
+    const history = ['کتاب']
+    expect((await c.call('POST', '/api/games/word-chain', { difficulty: 1, history, word: 'دریا' })).json.error).toBe('letter')
+    expect((await c.call('POST', '/api/games/word-chain', { difficulty: 1, history: ['کتاب', 'باران'], word: 'کتاب' })).json.error).toBe(
+      'letter'
+    )
+    const ok = (await c.call('POST', '/api/games/word-chain', { difficulty: 1, history, word: 'باران' })).json
+    expect(ok.ok).toBe(true)
+    if (ok.reply) expect(['ن']).toContain(Array.from(ok.reply as string)[0])
+  })
+
+  itLive('دورهای بازی‌های ایرانی و کنار گذاشتن کلمه‌روز و دوز از بازی تصادفی', async () => {
+    const c = new Client()
+    await c.call('POST', '/api/auth/login', { displayName: `تست ${suffix()}`, fingerprint: fp() })
+    for (const [g, n] of [
+      ['mosha-ere', 10],
+      ['riddle', 10],
+      ['iran-map', 12],
+      ['chess-puzzle', 3]
+    ] as const) {
+      expect((await c.call('GET', `/api/games/rounds/${g}?difficulty=3`)).json.rounds).toHaveLength(n)
+    }
+    for (let i = 0; i < 5; i++) {
+      const ids = (await c.call('POST', '/api/games/mix')).json.gameIds as string[]
+      expect(ids).not.toContain('word-of-day')
+      expect(ids).not.toContain('morris')
+    }
   })
 })

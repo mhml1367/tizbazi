@@ -205,6 +205,7 @@ export type UserWhereInput = {
   xpLog?: Prisma.XpLogListRelationFilter
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   dailyChallenges?: Prisma.DailyChallengeCompletionListRelationFilter
+  puzzles?: Prisma.DailyPuzzleListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -222,6 +223,7 @@ export type UserOrderByWithRelationInput = {
   xpLog?: Prisma.XpLogOrderByRelationAggregateInput
   streak?: Prisma.UserStreakOrderByWithRelationInput
   dailyChallenges?: Prisma.DailyChallengeCompletionOrderByRelationAggregateInput
+  puzzles?: Prisma.DailyPuzzleOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -242,6 +244,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   xpLog?: Prisma.XpLogListRelationFilter
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   dailyChallenges?: Prisma.DailyChallengeCompletionListRelationFilter
+  puzzles?: Prisma.DailyPuzzleListRelationFilter
 }, "id" | "email" | "fingerprint">
 
 export type UserOrderByWithAggregationInput = {
@@ -285,6 +288,7 @@ export type UserCreateInput = {
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -302,6 +306,7 @@ export type UserUncheckedCreateInput = {
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -319,6 +324,7 @@ export type UserUpdateInput = {
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -336,6 +342,7 @@ export type UserUncheckedUpdateInput = {
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -417,6 +424,20 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutPuzzlesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPuzzlesInput, Prisma.UserUncheckedCreateWithoutPuzzlesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPuzzlesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPuzzlesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPuzzlesInput, Prisma.UserUncheckedCreateWithoutPuzzlesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPuzzlesInput
+  upsert?: Prisma.UserUpsertWithoutPuzzlesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPuzzlesInput, Prisma.UserUpdateWithoutPuzzlesInput>, Prisma.UserUncheckedUpdateWithoutPuzzlesInput>
 }
 
 export type UserCreateNestedOneWithoutScoresInput = {
@@ -517,6 +538,90 @@ export type UserUpdateOneRequiredWithoutDailyChallengesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDailyChallengesInput, Prisma.UserUpdateWithoutDailyChallengesInput>, Prisma.UserUncheckedUpdateWithoutDailyChallengesInput>
 }
 
+export type UserCreateWithoutPuzzlesInput = {
+  id?: string
+  displayName: string
+  email?: string | null
+  passwordHash?: string | null
+  fingerprint: string
+  isRegistered?: boolean
+  createdAt?: Date | string
+  scores?: Prisma.ScoreCreateNestedManyWithoutUserInput
+  sessions?: Prisma.GameSessionCreateNestedManyWithoutUserInput
+  mixSessions?: Prisma.MixSessionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPuzzlesInput = {
+  id?: string
+  displayName: string
+  email?: string | null
+  passwordHash?: string | null
+  fingerprint: string
+  isRegistered?: boolean
+  createdAt?: Date | string
+  scores?: Prisma.ScoreUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.GameSessionUncheckedCreateNestedManyWithoutUserInput
+  mixSessions?: Prisma.MixSessionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPuzzlesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPuzzlesInput, Prisma.UserUncheckedCreateWithoutPuzzlesInput>
+}
+
+export type UserUpsertWithoutPuzzlesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPuzzlesInput, Prisma.UserUncheckedUpdateWithoutPuzzlesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPuzzlesInput, Prisma.UserUncheckedCreateWithoutPuzzlesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPuzzlesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPuzzlesInput, Prisma.UserUncheckedUpdateWithoutPuzzlesInput>
+}
+
+export type UserUpdateWithoutPuzzlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fingerprint?: Prisma.StringFieldUpdateOperationsInput | string
+  isRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scores?: Prisma.ScoreUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.GameSessionUpdateManyWithoutUserNestedInput
+  mixSessions?: Prisma.MixSessionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPuzzlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fingerprint?: Prisma.StringFieldUpdateOperationsInput | string
+  isRegistered?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scores?: Prisma.ScoreUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.GameSessionUncheckedUpdateManyWithoutUserNestedInput
+  mixSessions?: Prisma.MixSessionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutScoresInput = {
   id?: string
   displayName: string
@@ -531,6 +636,7 @@ export type UserCreateWithoutScoresInput = {
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutScoresInput = {
@@ -547,6 +653,7 @@ export type UserUncheckedCreateWithoutScoresInput = {
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutScoresInput = {
@@ -579,6 +686,7 @@ export type UserUpdateWithoutScoresInput = {
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutScoresInput = {
@@ -595,6 +703,7 @@ export type UserUncheckedUpdateWithoutScoresInput = {
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -611,6 +720,7 @@ export type UserCreateWithoutSessionsInput = {
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -627,6 +737,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -659,6 +770,7 @@ export type UserUpdateWithoutSessionsInput = {
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -675,6 +787,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMixSessionsInput = {
@@ -691,6 +804,7 @@ export type UserCreateWithoutMixSessionsInput = {
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMixSessionsInput = {
@@ -707,6 +821,7 @@ export type UserUncheckedCreateWithoutMixSessionsInput = {
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMixSessionsInput = {
@@ -739,6 +854,7 @@ export type UserUpdateWithoutMixSessionsInput = {
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMixSessionsInput = {
@@ -755,6 +871,7 @@ export type UserUncheckedUpdateWithoutMixSessionsInput = {
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutXpLogInput = {
@@ -771,6 +888,7 @@ export type UserCreateWithoutXpLogInput = {
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutXpLogInput = {
@@ -787,6 +905,7 @@ export type UserUncheckedCreateWithoutXpLogInput = {
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutXpLogInput = {
@@ -819,6 +938,7 @@ export type UserUpdateWithoutXpLogInput = {
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutXpLogInput = {
@@ -835,6 +955,7 @@ export type UserUncheckedUpdateWithoutXpLogInput = {
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStreakInput = {
@@ -851,6 +972,7 @@ export type UserCreateWithoutStreakInput = {
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStreakInput = {
@@ -867,6 +989,7 @@ export type UserUncheckedCreateWithoutStreakInput = {
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStreakInput = {
@@ -899,6 +1022,7 @@ export type UserUpdateWithoutStreakInput = {
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStreakInput = {
@@ -915,6 +1039,7 @@ export type UserUncheckedUpdateWithoutStreakInput = {
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAchievementsInput = {
@@ -931,6 +1056,7 @@ export type UserCreateWithoutAchievementsInput = {
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAchievementsInput = {
@@ -947,6 +1073,7 @@ export type UserUncheckedCreateWithoutAchievementsInput = {
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedCreateNestedManyWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAchievementsInput = {
@@ -979,6 +1106,7 @@ export type UserUpdateWithoutAchievementsInput = {
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAchievementsInput = {
@@ -995,6 +1123,7 @@ export type UserUncheckedUpdateWithoutAchievementsInput = {
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   dailyChallenges?: Prisma.DailyChallengeCompletionUncheckedUpdateManyWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDailyChallengesInput = {
@@ -1011,6 +1140,7 @@ export type UserCreateWithoutDailyChallengesInput = {
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   xpLog?: Prisma.XpLogCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDailyChallengesInput = {
@@ -1027,6 +1157,7 @@ export type UserUncheckedCreateWithoutDailyChallengesInput = {
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   xpLog?: Prisma.XpLogUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  puzzles?: Prisma.DailyPuzzleUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDailyChallengesInput = {
@@ -1059,6 +1190,7 @@ export type UserUpdateWithoutDailyChallengesInput = {
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   xpLog?: Prisma.XpLogUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDailyChallengesInput = {
@@ -1075,6 +1207,7 @@ export type UserUncheckedUpdateWithoutDailyChallengesInput = {
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   xpLog?: Prisma.XpLogUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  puzzles?: Prisma.DailyPuzzleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1089,6 +1222,7 @@ export type UserCountOutputType = {
   achievements: number
   xpLog: number
   dailyChallenges: number
+  puzzles: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1098,6 +1232,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   achievements?: boolean | UserCountOutputTypeCountAchievementsArgs
   xpLog?: boolean | UserCountOutputTypeCountXpLogArgs
   dailyChallenges?: boolean | UserCountOutputTypeCountDailyChallengesArgs
+  puzzles?: boolean | UserCountOutputTypeCountPuzzlesArgs
 }
 
 /**
@@ -1152,6 +1287,13 @@ export type UserCountOutputTypeCountDailyChallengesArgs<ExtArgs extends runtime.
   where?: Prisma.DailyChallengeCompletionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPuzzlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DailyPuzzleWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1168,6 +1310,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   xpLog?: boolean | Prisma.User$xpLogArgs<ExtArgs>
   streak?: boolean | Prisma.User$streakArgs<ExtArgs>
   dailyChallenges?: boolean | Prisma.User$dailyChallengesArgs<ExtArgs>
+  puzzles?: boolean | Prisma.User$puzzlesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1210,6 +1353,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   xpLog?: boolean | Prisma.User$xpLogArgs<ExtArgs>
   streak?: boolean | Prisma.User$streakArgs<ExtArgs>
   dailyChallenges?: boolean | Prisma.User$dailyChallengesArgs<ExtArgs>
+  puzzles?: boolean | Prisma.User$puzzlesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1225,6 +1369,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     xpLog: Prisma.$XpLogPayload<ExtArgs>[]
     streak: Prisma.$UserStreakPayload<ExtArgs> | null
     dailyChallenges: Prisma.$DailyChallengeCompletionPayload<ExtArgs>[]
+    puzzles: Prisma.$DailyPuzzlePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1635,6 +1780,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   xpLog<T extends Prisma.User$xpLogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$xpLogArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$XpLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   streak<T extends Prisma.User$streakArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$streakArgs<ExtArgs>>): Prisma.Prisma__UserStreakClient<runtime.Types.Result.GetResult<Prisma.$UserStreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dailyChallenges<T extends Prisma.User$dailyChallengesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dailyChallengesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyChallengeCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  puzzles<T extends Prisma.User$puzzlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$puzzlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyPuzzlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2224,6 +2370,30 @@ export type User$dailyChallengesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.DailyChallengeCompletionScalarFieldEnum | Prisma.DailyChallengeCompletionScalarFieldEnum[]
+}
+
+/**
+ * User.puzzles
+ */
+export type User$puzzlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DailyPuzzle
+   */
+  select?: Prisma.DailyPuzzleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DailyPuzzle
+   */
+  omit?: Prisma.DailyPuzzleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DailyPuzzleInclude<ExtArgs> | null
+  where?: Prisma.DailyPuzzleWhereInput
+  orderBy?: Prisma.DailyPuzzleOrderByWithRelationInput | Prisma.DailyPuzzleOrderByWithRelationInput[]
+  cursor?: Prisma.DailyPuzzleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DailyPuzzleScalarFieldEnum | Prisma.DailyPuzzleScalarFieldEnum[]
 }
 
 /**

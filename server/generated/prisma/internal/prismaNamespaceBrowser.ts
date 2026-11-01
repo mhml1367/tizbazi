@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  DailyPuzzle: 'DailyPuzzle',
+  ContentItem: 'ContentItem',
   Score: 'Score',
   GameSession: 'GameSession',
   MixSession: 'MixSession',
@@ -93,6 +95,32 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DailyPuzzleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  game: 'game',
+  key: 'key',
+  answer: 'answer',
+  guesses: 'guesses',
+  solved: 'solved',
+  finished: 'finished',
+  createdAt: 'createdAt'
+} as const
+
+export type DailyPuzzleScalarFieldEnum = (typeof DailyPuzzleScalarFieldEnum)[keyof typeof DailyPuzzleScalarFieldEnum]
+
+
+export const ContentItemScalarFieldEnum = {
+  id: 'id',
+  kind: 'kind',
+  key: 'key',
+  data: 'data',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContentItemScalarFieldEnum = (typeof ContentItemScalarFieldEnum)[keyof typeof ContentItemScalarFieldEnum]
 
 
 export const ScoreScalarFieldEnum = {
@@ -232,6 +260,13 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -246,4 +281,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

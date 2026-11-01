@@ -47,6 +47,16 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model DailyPuzzle
+ * 
+ */
+export type DailyPuzzle = Prisma.DailyPuzzleModel
+/**
+ * Model ContentItem
+ * 
+ */
+export type ContentItem = Prisma.ContentItemModel
+/**
  * Model Score
  * 
  */

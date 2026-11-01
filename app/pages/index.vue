@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { fa } from '~/i18n/fa'
-import { GAME_IDS } from '~~/shared/validation'
+import { GAME_GROUPS } from '~~/shared/validation'
 
-const icons: Record<string, string> = {
-  stroop: '🌈',
-  'missing-letter': '🔤',
-  'chain-calc': '🧮',
-  'quick-math': '⚡',
-  'sequence-memory': '🔁',
-  'quick-category': '🗂️',
-  'synonym-antonym': '↔️',
-  proverb: '📜',
-  'odd-one-out': '🎯',
-  'reverse-memory': '🔢'
-}
-const games = GAME_IDS.map((id) => ({ id, icon: icons[id]!, name: fa.games[id]!.name, desc: fa.games[id]!.desc }))
+const groups = GAME_GROUPS.map((g) => ({
+  id: g.id,
+  title: fa.home.groups[g.id]!,
+  games: g.games.map((id) => ({ id, name: fa.games[id]!.name, desc: fa.games[id]!.desc }))
+}))
 
 const { user } = useAuth()
 const { start: startMix } = useMix()
@@ -45,14 +37,18 @@ async function onMix() {
       <p v-if="error" class="error" role="alert">{{ error }}</p>
     </section>
 
-    <h2 class="sub">{{ fa.home.pickGame }}</h2>
-    <div class="grid">
-      <NuxtLink v-for="g in games" :key="g.id" :to="`/games/${g.id}`" class="card game">
-        <span class="ic">{{ g.icon }}</span>
-        <h3>{{ g.name }}</h3>
-        <p>{{ g.desc }}</p>
-      </NuxtLink>
-    </div>
+    <section v-for="grp in groups" :key="grp.id" class="group">
+      <h2 class="sub">{{ grp.title }}</h2>
+      <div class="grid">
+        <NuxtLink v-for="g in grp.games" :key="g.id" :to="`/games/${g.id}`" class="card game">
+          <div class="thumb"><GameArt :game="g.id" /></div>
+          <div class="body">
+            <h3>{{ g.name }}</h3>
+            <p>{{ g.desc }}</p>
+          </div>
+        </NuxtLink>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -80,31 +76,68 @@ async function onMix() {
 .sub {
   color: var(--text-hi);
 }
+.group {
+  margin-bottom: var(--sp-6);
+}
 .grid {
   display: grid;
   gap: var(--sp-4);
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
+/* موبایل: دو ستون با کارت‌های جمع‌وجورتر */
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+  }
+  .body {
+    padding: var(--sp-2) var(--sp-3) var(--sp-3);
+  }
+  .game h3 {
+    font-size: 15px;
+  }
+  .game p {
+    font-size: 12px;
+  }
+}
 .game {
-  padding: var(--sp-5);
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: transform 200ms var(--ease);
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 200ms var(--ease),
+    border-color 200ms var(--ease);
 }
 .game:hover {
   transform: translateY(-4px);
   border-color: var(--accent);
 }
-.ic {
-  font-size: 32px;
+.thumb {
+  aspect-ratio: 5 / 3;
+  overflow: hidden;
+}
+.thumb :deep(svg) {
+  transition: transform 300ms var(--ease);
+}
+.game:hover .thumb :deep(svg) {
+  transform: scale(1.06);
+}
+.body {
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
 }
 .game h3 {
-  margin: var(--sp-2) 0 var(--sp-1);
+  margin: 0 0 var(--sp-1);
   color: var(--text-hi);
 }
 .game p {
   margin: 0;
   font-size: 14px;
   color: var(--text-mid);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>

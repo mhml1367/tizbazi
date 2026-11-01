@@ -1,10 +1,10 @@
-import { GAME_IDS } from '#shared/validation'
+import { GAME_IDS, MIX_EXCLUDED } from '#shared/validation'
 
-// شروع جلسهٔ ترکیبی: ۳ تا ۵ بازی متمایز (بدون تکرار) به‌صورت تصادفی
+// شروع جلسهٔ ترکیبی: ۳ تا ۵ بازی متمایز (بدون تکرار) به‌صورت تصادفی؛ بازی‌های روزانه/طولانی کنار گذاشته می‌شوند
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
   const count = 3 + Math.floor(Math.random() * 3)
-  const pool = [...GAME_IDS]
+  const pool = GAME_IDS.filter((g) => !MIX_EXCLUDED.includes(g))
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[pool[i], pool[j]] = [pool[j]!, pool[i]!]

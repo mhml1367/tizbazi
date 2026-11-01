@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { fa } from '~/i18n/fa'
+import { TIER_EMOJI, TIER_LINES, pickBySeed, resultTier } from '~~/shared/reaction'
 
 const props = defineProps<{
   score: number
@@ -13,14 +14,39 @@ const props = defineProps<{
 defineEmits<{ (e: 'again'): void }>()
 
 const { mix, nextGame, start: startMix } = useMix()
-const title = computed(() => (props.score >= props.great ? fa.result.great : props.score >= props.good ? fa.result.good : fa.result.keep))
 const gameName = (id: string) => fa.games[id]?.name ?? id
+
+// واکنش به امتیاز: با رسیدن پاسخ سرور (رکورد قبلی) ممکن است به «رکورد» ارتقا پیدا کند
+const tier = computed(() => resultTier(props.score, props.good, props.great, props.reward?.record))
+const seed = Math.floor(Math.random() * 1000)
+const emoji = computed(() => pickBySeed(TIER_EMOJI[tier.value], seed))
+const line = computed(() => pickBySeed(TIER_LINES[tier.value], seed))
+const celebrate = computed(() => tier.value === 'record' || tier.value === 'great')
+const firstTime = computed(() => props.reward?.record && props.reward.record.prevBest === null && props.score > 0)
+
+// شمارش امتیاز از صفر
+const shown = ref(0)
+onMounted(() => {
+  const t0 = performance.now()
+  const run = (t: number) => {
+    const k = Math.min(1, (t - t0) / 900)
+    shown.value = Math.round(props.score * (1 - (1 - k) ** 3))
+    if (k < 1) requestAnimationFrame(run)
+  }
+  requestAnimationFrame(run)
+})
 </script>
 
 <template>
-  <div class="card pad">
-    <h2>{{ title }}</h2>
-    <div class="big-score">{{ toFa(score) }}</div>
+  <div class="card result" :class="tier">
+    <ConfettiBurst v-if="celebrate" :key="tier" :count="tier === 'record' ? 90 : 55" />
+    <div class="emoji" :class="tier" aria-hidden="true">{{ emoji }}</div>
+    <h2>{{ line }}</h2>
+    <p v-if="tier === 'record' && reward?.record" class="rec">
+      {{ fa.result.prev }}: {{ toFa(reward.record.prevBest) }} ← {{ fa.result.now }}: {{ toFa(score) }}
+    </p>
+    <p v-else-if="firstTime" class="rec">{{ fa.result.first }}</p>
+    <div class="big-score">{{ toFa(shown) }}</div>
     <p>{{ fa.common.accuracy }}: {{ toFa(accuracy) }}٪</p>
     <p class="state" :class="saveState">
       {{
@@ -66,14 +92,83 @@ const gameName = (id: string) => fa.games[id]?.name ?? id
 </template>
 
 <style scoped>
-.pad {
+.result {
   padding: var(--sp-5);
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+/* رنگ لبهٔ کارت بسته به سطح واکنش */
+.result.record {
+  border-color: var(--c-yellow);
+  box-shadow:
+    0 0 0 2px var(--c-yellow),
+    0 0 40px color-mix(in oklch, var(--c-yellow) 35%, transparent);
+}
+.result.great {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+h2 {
+  margin: var(--sp-2) 0;
+  color: var(--text-hi);
+  font-size: 22px;
+  font-weight: 900;
+}
+.emoji {
+  font-size: 72px;
+  line-height: 1.2;
+  display: inline-block;
+  animation: pop 600ms var(--ease) both;
+}
+.emoji.record,
+.emoji.great {
+  animation:
+    pop 600ms var(--ease) both,
+    wiggle 1.2s 600ms ease-in-out 2;
+}
+.emoji.low,
+.emoji.zero {
+  animation:
+    pop 600ms var(--ease) both,
+    bob 2s 600ms ease-in-out infinite;
+}
+@keyframes pop {
+  0% {
+    transform: scale(0) rotate(-20deg);
+  }
+  70% {
+    transform: scale(1.25) rotate(6deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes wiggle {
+  25% {
+    transform: rotate(-12deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(12deg) scale(1.1);
+  }
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.rec {
+  margin: 0;
+  font-weight: 700;
+  color: var(--c-orange);
 }
 .big-score {
   font-size: 64px;
   font-weight: 900;
   color: var(--accent);
+}
+.record .big-score {
+  color: var(--c-orange);
 }
 .state.failed {
   color: var(--danger);

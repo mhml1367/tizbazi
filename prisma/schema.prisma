@@ -24,6 +24,37 @@ model User {
   xpLog        XpLog[]
   streak       UserStreak?
   dailyChallenges DailyChallengeCompletion[]
+  puzzles      DailyPuzzle[]
+}
+
+// وضعیت معماهای سرور-محور (کلمه‌روز): جواب هرگز به کلاینت فرستاده نمی‌شود مگر پس از پایان
+model DailyPuzzle {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      String
+  key       String // «YYYY-MM-DD» برای معمای روزانه یا «practice:…» برای تمرین
+  answer    String
+  guesses   String[]
+  solved    Boolean  @default(false)
+  finished  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, game, key])
+  @@index([userId, game, createdAt])
+}
+
+// بانک محتوای عمومی بازی‌های جدید (بیت‌ها، چیستان‌ها، معماهای شطرنج، نقشه، …)؛ با npm run seed پر می‌شود
+model ContentItem {
+  id   Int    @id @default(autoincrement())
+  kind      String
+  key       String
+  data      Json
+  /// سرور با این ستون می‌فهمد seed دوباره اجرا شده و کش را تازه می‌کند
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([kind, key])
+  @@index([kind])
 }
 
 model Score {
