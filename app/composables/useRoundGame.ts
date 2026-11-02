@@ -49,7 +49,7 @@ export function useRoundGame<R>(o: Options<R>) {
         ? await o.build(difficulty.value)
         : (await $fetch<{ rounds: R[] }>(`/api/games/rounds/${o.gameId}`, { query: { difficulty: difficulty.value } })).rounds
     } catch (e: any) {
-      loadError.value = e?.data?.statusMessage || 'بارگذاری بازی انجام نشد'
+      loadError.value = e?.data?.message || 'بارگذاری بازی انجام نشد'
       return
     }
     idx.value = 0

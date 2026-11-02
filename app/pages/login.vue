@@ -28,7 +28,7 @@ async function onSubmit() {
     else await submit('register', { displayName: form.displayName, email: form.email || undefined, password: form.password })
     await navigateTo(typeof route.query.next === 'string' && route.query.next.startsWith('/') ? route.query.next : '/')
   } catch (e: any) {
-    error.value = e?.data?.statusMessage || e?.statusMessage || 'خطایی رخ داد'
+    error.value = e?.data?.message || 'خطایی رخ داد'
   } finally {
     busy.value = false
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { fa } from '~/i18n/fa'
-import { TIER_EMOJI, TIER_LINES, pickBySeed, resultTier } from '~~/shared/reaction'
+import { TIER_EMOJI, pickBySeed, reactionLines, resultTier } from '~~/shared/reaction'
 
 const props = defineProps<{
   score: number
@@ -20,7 +20,8 @@ const gameName = (id: string) => fa.games[id]?.name ?? id
 const tier = computed(() => resultTier(props.score, props.good, props.great, props.reward?.record))
 const seed = Math.floor(Math.random() * 1000)
 const emoji = computed(() => pickBySeed(TIER_EMOJI[tier.value], seed))
-const line = computed(() => pickBySeed(TIER_LINES[tier.value], seed))
+const route = useRoute()
+const line = computed(() => pickBySeed(reactionLines(tier.value, String(route.params.game ?? route.path.split('/').pop())), seed))
 const celebrate = computed(() => tier.value === 'record' || tier.value === 'great')
 const firstTime = computed(() => props.reward?.record && props.reward.record.prevBest === null && props.score > 0)
 

@@ -13,6 +13,6 @@ const query = z.object({
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
   const q = query.safeParse(getQuery(event))
-  if (!q.success) throw createError({ statusCode: 400, statusMessage: q.error.issues[0]!.message })
+  if (!q.success) throw createError({ statusCode: 400, message: q.error.issues[0]!.message })
   return publicPuzzle(await getPuzzle(user.id, q.data.mode, q.data.mode === 'practice' && q.data.fresh))
 })

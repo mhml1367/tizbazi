@@ -12,7 +12,10 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'fa', dir: 'rtl' },
       title: 'تیزبازی',
-      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'theme-color', content: '#0a7f66' }
+      ],
       // تم ذخیره‌شده را پیش از اولین رندر اعمال می‌کند تا چشمک روشن/تیره نداشته باشیم
       script: [
         {
@@ -22,6 +25,9 @@ export default defineNuxtConfig({
         }
       ],
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/icon-32.png' },
+        { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {

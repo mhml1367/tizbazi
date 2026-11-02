@@ -23,3 +23,18 @@ describe('واکنش صفحهٔ نتیجه', () => {
     }
   })
 })
+
+describe('reactionLines', () => {
+  it('جملهٔ مخصوص بازی دارد و برای بازی ناشناخته عمومی است', async () => {
+    const { reactionLines, GAME_LINES, TIER_LINES } = await import('../../shared/reaction')
+    expect(reactionLines('great', 'stroop')).toBe(GAME_LINES.stroop!.great)
+    expect(reactionLines('low', 'نامعلوم')).toBe(TIER_LINES.low)
+    expect(reactionLines('record', 'stroop')).toBe(TIER_LINES.record)
+  })
+  it('هر ۲۲ بازی برای چهار سطح جمله دارد', async () => {
+    const { GAME_LINES } = await import('../../shared/reaction')
+    const ids = Object.keys(GAME_LINES)
+    expect(ids).toHaveLength(22)
+    for (const id of ids) for (const t of ['great', 'good', 'low', 'zero'] as const) expect(GAME_LINES[id]![t]!.length).toBeGreaterThan(0)
+  })
+})

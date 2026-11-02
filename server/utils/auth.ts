@@ -10,7 +10,7 @@ const MAX_AGE = 60 * 60 * 24 * 7 // ۷ روز
 function secret() {
   const s = useRuntimeConfig().jwtSecret
   if (!s || s.length < 32) {
-    throw createError({ statusCode: 500, statusMessage: 'JWT_SECRET تنظیم نشده یا کوتاه است' })
+    throw createError({ statusCode: 500, message: 'JWT_SECRET تنظیم نشده یا کوتاه است' })
   }
   return new TextEncoder().encode(s)
 }
@@ -29,7 +29,8 @@ export async function issueSession(event: H3Event, userId: string) {
     .sign(secret())
   setCookie(event, COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    // فقط روی HTTPS (مستقیم یا پشت پراکسی)؛ روی http مرورگر کوکی Secure را دور می‌اندازد
+    secure: getRequestProtocol(event, { xForwardedProto: true }) === 'https',
     sameSite: 'strict',
     path: '/',
     maxAge: MAX_AGE
@@ -53,7 +54,7 @@ export async function getSessionUser(event: H3Event) {
 
 export async function requireUser(event: H3Event) {
   const user = await getSessionUser(event)
-  if (!user) throw createError({ statusCode: 401, statusMessage: 'ابتدا وارد شوید' })
+  if (!user) throw createError({ statusCode: 401, message: 'ابتدا وارد شوید' })
   return user
 }
 

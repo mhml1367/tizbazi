@@ -124,4 +124,42 @@ async function onLogout() {
 .main {
   padding-block: var(--sp-6);
 }
+/* موبایل: سربرگ در یک ردیف بماند */
+@media (max-width: 560px) {
+  .bar {
+    gap: var(--sp-2);
+    flex-wrap: nowrap;
+    min-height: 56px;
+  }
+  .brand {
+    font-size: 20px;
+  }
+  .nav {
+    gap: var(--sp-3);
+    font-size: 14px;
+    min-width: 0;
+  }
+  .side {
+    gap: var(--sp-1);
+  }
+  .icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .who {
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .side .btn {
+    padding-inline: var(--sp-3);
+    font-size: 13px;
+  }
+  .main {
+    padding-block: var(--sp-4);
+  }
+}
 </style>

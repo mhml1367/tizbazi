@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   await requireUser(event)
   const game = getRouterParam(event, 'game')
   const q = query.safeParse(getQuery(event))
-  if (!q.success) throw createError({ statusCode: 400, statusMessage: 'سختی نامعتبر است' })
+  if (!q.success) throw createError({ statusCode: 400, message: 'سختی نامعتبر است' })
   const d = q.data.difficulty as 1 | 2 | 3
 
   let rounds: unknown[]
@@ -66,9 +66,9 @@ export default defineEventHandler(async (event) => {
       break
     }
     default:
-      throw createError({ statusCode: 404, statusMessage: 'بازی یافت نشد' })
+      throw createError({ statusCode: 404, message: 'بازی یافت نشد' })
   }
-  if (!rounds.length) throw createError({ statusCode: 503, statusMessage: 'بانک داده خالی است؛ npm run seed را اجرا کنید' })
+  if (!rounds.length) throw createError({ statusCode: 503, message: 'بانک داده خالی است؛ npm run seed را اجرا کنید' })
   return { rounds }
 })
 

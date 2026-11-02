@@ -11,7 +11,7 @@ const body = z.object({
 export default defineEventHandler(async (event) => {
   await requireUser(event)
   const p = body.safeParse(await readBody(event))
-  if (!p.success) throw createError({ statusCode: 400, statusMessage: p.error.issues[0]!.message })
+  if (!p.success) throw createError({ statusCode: 400, message: p.error.issues[0]!.message })
 
   // بانک هر دسته به‌صورت Set (کلیدهای مقایسه در seed ساخته شده‌اند) + ریشه‌های نام خانوادگی
   // از اسم‌ها و شهرها (احمد → احمدی، تهران → تهرانی)

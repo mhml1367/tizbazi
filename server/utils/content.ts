@@ -25,7 +25,7 @@ export async function getContent<T>(kind: string): Promise<T> {
     }
   }
   const row = await prisma.contentItem.findUnique({ where })
-  if (!row) throw createError({ statusCode: 503, statusMessage: 'بانک داده خالی است؛ npm run seed را اجرا کنید' })
+  if (!row) throw createError({ statusCode: 503, message: 'بانک داده خالی است؛ npm run seed را اجرا کنید' })
   cache.set(kind, { data: row.data, version: row.updatedAt.getTime(), checkedAt: Date.now() })
   return row.data as T
 }

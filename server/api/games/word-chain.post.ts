@@ -15,7 +15,7 @@ const body = z.object({
 export default defineEventHandler(async (event) => {
   await requireUser(event)
   const p = body.safeParse(await readBody(event))
-  if (!p.success) throw createError({ statusCode: 400, statusMessage: p.error.issues[0]!.message })
+  if (!p.success) throw createError({ statusCode: 400, message: p.error.issues[0]!.message })
   const { difficulty, history, word } = p.data
   const d = difficulty as 1 | 2 | 3
 

@@ -29,7 +29,7 @@ async function start() {
       await $fetch<{ rounds: MissingRound[] }>('/api/games/missing-letter', { query: { difficulty: difficulty.value } })
     ).rounds
   } catch (e: any) {
-    loadError.value = e?.data?.statusMessage || 'بارگذاری بازی انجام نشد'
+    loadError.value = e?.data?.message || 'بارگذاری بازی انجام نشد'
     return
   }
   idx.value = 0

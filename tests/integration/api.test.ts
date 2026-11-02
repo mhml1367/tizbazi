@@ -65,7 +65,7 @@ describe('احراز هویت', () => {
     for (const displayName of ['a', 'x'.repeat(21), '<script>']) {
       const r = await c.call('POST', '/api/auth/login', { displayName, fingerprint: fp() })
       expect(r.status).toBe(400)
-      expect(r.json.statusMessage).toMatch(/[؀-ۿ]/)
+      expect(r.json.message).toMatch(/[؀-ۿ]/)
     }
   })
 

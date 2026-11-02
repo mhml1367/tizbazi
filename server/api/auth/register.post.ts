@@ -5,11 +5,11 @@ import { registerSchema } from '#shared/validation'
 // و تمام امتیازها و پیشرفتش حفظ می‌شود
 export default defineEventHandler(async (event) => {
   const p = registerSchema.safeParse(await readBody(event))
-  if (!p.success) throw createError({ statusCode: 400, statusMessage: p.error.issues[0]!.message })
+  if (!p.success) throw createError({ statusCode: 400, message: p.error.issues[0]!.message })
   const { displayName, email, password, fingerprint } = p.data
 
   if (email && (await prisma.user.findUnique({ where: { email } }))) {
-    throw createError({ statusCode: 409, statusMessage: 'این ایمیل قبلاً ثبت شده است' })
+    throw createError({ statusCode: 409, message: 'این ایمیل قبلاً ثبت شده است' })
   }
   const passwordHash = await hashPassword(password)
   const fp = normalizeFingerprint(fingerprint)

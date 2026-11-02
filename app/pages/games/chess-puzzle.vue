@@ -57,7 +57,7 @@ async function start() {
       await $fetch<{ rounds: ChessPuzzle[] }>('/api/games/rounds/chess-puzzle', { query: { difficulty: difficulty.value } })
     ).rounds
   } catch (e: any) {
-    loadError.value = e?.data?.statusMessage || 'بارگذاری بازی انجام نشد'
+    loadError.value = e?.data?.message || 'بارگذاری بازی انجام نشد'
     return
   }
   idx.value = 0

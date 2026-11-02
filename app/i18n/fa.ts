@@ -37,9 +37,9 @@ export const fa = {
     randomMix: 'بازی تصادفی',
     pickGame: 'یک بازی انتخاب کن',
     groups: {
-      classic: 'تمرین‌های کلاسیک',
-      iranian: 'بازی‌های با ریشهٔ ایرانی',
-      'iranian-mind': 'تمرین‌های ذهنی با حال‌وهوای ایرانی'
+      classic: 'ورزش ذهن',
+      iranian: 'ادب و بازی‌های ایرانی',
+      'iranian-mind': 'سفر ذهنی در ایران'
     } as Record<string, string>
   },
   mix: {

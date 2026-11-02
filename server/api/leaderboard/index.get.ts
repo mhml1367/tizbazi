@@ -10,7 +10,7 @@ const query = z.object({
 // GET /api/leaderboard?gameId=&period=  (period: today | week | month | year | all)
 export default defineEventHandler(async (event) => {
   const q = query.safeParse(getQuery(event))
-  if (!q.success) throw createError({ statusCode: 400, statusMessage: q.error.issues[0]!.message })
+  if (!q.success) throw createError({ statusCode: 400, message: q.error.issues[0]!.message })
   const me = await getSessionUser(event)
   const rows = await leaderboardRows(prisma, q.data.gameId, q.data.period)
   return { gameId: q.data.gameId, period: q.data.period, meId: me?.id ?? null, rows }

@@ -2,7 +2,7 @@
 import { fa } from '~/i18n/fa'
 import { normalizeFa } from '~~/shared/persian'
 import { KEYBOARD_ROWS, WD, shareText, wordleScore, type Mark } from '~~/shared/games/wordle'
-import { TIER_EMOJI, TIER_LINES, pickBySeed, resultTier } from '~~/shared/reaction'
+import { TIER_EMOJI, pickBySeed, reactionLines, resultTier } from '~~/shared/reaction'
 
 // امتیاز این بازی را سرور هنگام پایان معما ثبت می‌کند؛ اینجا فقط نمایش و ورودی است
 interface Row {
@@ -52,8 +52,8 @@ const done = computed(() => !!state.value?.finished)
 const seed = Math.floor(Math.random() * 1000)
 const tier = computed(() => {
   const s = state.value
-  const score = s?.solved ? wordleScore(s.rows.length) : 0
-  return resultTier(score, wordleScore(5), wordleScore(3), reward.value?.record)
+  const score = wordleScore(!!s?.solved, s?.rows.length ?? 0)
+  return resultTier(score, wordleScore(true, 5), wordleScore(true, 3), reward.value?.record)
 })
 
 function type(ch: string) {
@@ -82,7 +82,7 @@ async function submit() {
     current.value = []
     error.value = ''
   } catch (e: any) {
-    bump(e?.data?.statusMessage || 'خطا')
+    bump(e?.data?.message || 'خطا')
   } finally {
     busy.value = false
   }
@@ -171,7 +171,7 @@ async function share() {
       <div v-if="state && done" class="end">
         <ConfettiBurst v-if="reward && (tier === 'record' || tier === 'great')" />
         <div class="emoji" aria-hidden="true">{{ pickBySeed(TIER_EMOJI[tier], seed) }}</div>
-        <h2 class="line">{{ pickBySeed(TIER_LINES[tier], seed) }}</h2>
+        <h2 class="line">{{ pickBySeed(reactionLines(tier, 'word-of-day'), seed) }}</h2>
         <p v-if="state.solved" class="win">{{ T.solved }} ({{ toFa(state.rows.length) }}/{{ toFa(WD.maxGuesses) }})</p>
         <p v-else>
           {{ T.failed }} <b class="answer">{{ state.answer }}</b>

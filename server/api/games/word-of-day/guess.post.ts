@@ -11,17 +11,17 @@ const body = z.object({ mode: z.enum(['daily', 'practice']), guess: z.string().m
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
   const p = body.safeParse(await readBody(event))
-  if (!p.success) throw createError({ statusCode: 400, statusMessage: p.error.issues[0]!.message })
+  if (!p.success) throw createError({ statusCode: 400, message: p.error.issues[0]!.message })
 
   const puzzle = await getPuzzle(user.id, p.data.mode)
-  if (puzzle.finished) throw createError({ statusCode: 409, statusMessage: 'این معما تمام شده است' })
+  if (puzzle.finished) throw createError({ statusCode: 409, message: 'این معما تمام شده است' })
 
   const guess = compareKey(p.data.guess)
-  if (!isFiveLetters(guess)) throw createError({ statusCode: 400, statusMessage: 'کلمه باید دقیقاً ۵ حرف باشد' })
+  if (!isFiveLetters(guess)) throw createError({ statusCode: 400, message: 'کلمه باید دقیقاً ۵ حرف باشد' })
   const dictionary = await getDictionary()
   const answers = await getContent<string[]>('wordle-answers')
   if (!dictionary.has(guess) && !answers.includes(guess)) {
-    throw createError({ statusCode: 422, statusMessage: 'این کلمه در واژه‌نامه نیست' })
+    throw createError({ statusCode: 422, message: 'این کلمه در واژه‌نامه نیست' })
   }
 
   const guesses = [...puzzle.guesses, guess]
