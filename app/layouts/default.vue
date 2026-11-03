@@ -2,6 +2,7 @@
 import { fa } from '~/i18n/fa'
 
 const { user, refresh, logout } = useAuth()
+const route = useRoute()
 const theme = ref<'light' | 'dark'>('light')
 
 function applyTheme(t: 'light' | 'dark') {
@@ -56,7 +57,7 @@ async function onLogout() {
         </div>
       </div>
     </header>
-    <main class="container main"><slot /></main>
+    <main class="container main" :class="{ 'in-game': route.path.startsWith('/games/') }"><slot /></main>
   </div>
 </template>
 
@@ -160,6 +161,36 @@ async function onLogout() {
   }
   .main {
     padding-block: var(--sp-4);
+  }
+
+  /* داخل بازی: کارتِ در حال بازی تا پایین صفحه کشیده شود و پایین گوشی خالی نماند */
+  .main.in-game {
+    min-height: calc(100dvh - 57px);
+    display: flex;
+    flex-direction: column;
+  }
+  .main.in-game > :deep(div) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .main.in-game > :deep(div) > .card:not(.intro):not(.result) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* بازی‌های سؤال‌وجواب: نوار بالا ثابت، سؤال و گزینه‌ها به‌طور مساوی در بقیهٔ ارتفاع */
+  .main.in-game > :deep(div) > .card:has(> .hud) {
+    justify-content: flex-start;
+  }
+  .main.in-game > :deep(div) > .card:has(> .hud) > :not(.hud):not([role='progressbar']) {
+    margin-block: auto;
+  }
+  .main.in-game :deep(.opt),
+  .main.in-game :deep(.opt-btn) {
+    min-height: 64px;
   }
 }
 </style>
