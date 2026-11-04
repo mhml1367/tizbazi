@@ -124,6 +124,10 @@ async function onLogout() {
 }
 .main {
   padding-block: var(--sp-6);
+  padding-bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px));
+}
+.top {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 /* موبایل: سربرگ در یک ردیف بماند */
 @media (max-width: 560px) {
@@ -161,6 +165,7 @@ async function onLogout() {
   }
   .main {
     padding-block: var(--sp-4);
+    padding-bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px));
   }
 
   /* داخل بازی: کارتِ در حال بازی تا پایین صفحه کشیده شود و پایین گوشی خالی نماند */
@@ -175,7 +180,7 @@ async function onLogout() {
     flex-direction: column;
     width: 100%;
   }
-  .main.in-game > :deep(div) > .card:not(.intro):not(.result) {
+  .main.in-game > :deep(div) > .card {
     flex: 1;
     display: flex;
     flex-direction: column;

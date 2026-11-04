@@ -61,4 +61,21 @@ h1 {
   font-size: 20px;
   padding-inline: var(--sp-7);
 }
+/* موبایل: کارت تا پایین صفحه کشیده می‌شود؛ تصویر سرصفحه فضای اضافه را می‌گیرد */
+@media (max-width: 560px) {
+  .banner {
+    flex: 1 1 auto;
+    aspect-ratio: auto;
+    max-height: none;
+    min-height: 180px;
+  }
+  .banner :deep(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .content {
+    flex: none;
+  }
+}
 </style>
