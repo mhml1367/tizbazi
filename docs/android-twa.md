@@ -4,14 +4,14 @@
 
 ## پیش‌نیازها
 
-1. **سایت باید روی HTTPS باشد** (مثلاً `https://tizbazi.example.ir`). TWA روی `http` کار نمی‌کند.
+1. **سایت باید روی HTTPS باشد** (`https://tizbazii.ir`). TWA روی `http` کار نمی‌کند.
 2. در `.env` سرور دو مقدار بگذارید و سرور را دوباره بالا بیاورید (مقدار دوم در مرحلهٔ ۶ به‌دست می‌آید):
    ```
    TWA_PACKAGE=ir.tizbazi.app
    TWA_SHA256=AA:BB:...
    ```
-   این‌ها از `https://دامنه/.well-known/assetlinks.json` سرو می‌شوند.
-3. بعد از انتشار، `https://دامنه/manifest.webmanifest` و `/sw.js` باید باز شوند. در Chrome DevTools ← Application ← Manifest هم بدون خطا باشد.
+   این‌ها از `https://tizbazii.ir/.well-known/assetlinks.json` سرو می‌شوند.
+3. بعد از انتشار، `https://tizbazii.ir/manifest.webmanifest` و `/sw.js` باید باز شوند. در Chrome DevTools ← Application ← Manifest هم بدون خطا باشد.
 
 ## مراحل در Android Studio
 
@@ -30,8 +30,8 @@ implementation("com.google.androidbrowserhelper:androidbrowserhelper:2.5.0")
 
 در `app/build.gradle.kts` (بخش `android { defaultConfig { … } }`) این‌ها را هم تنظیم کنید:
 ```kotlin
-manifestPlaceholders["hostName"] = "tizbazi.example.ir"   // دامنهٔ خودتان
-manifestPlaceholders["defaultUrl"] = "https://tizbazi.example.ir/"
+manifestPlaceholders["hostName"] = "tizbazii.ir"   // دامنهٔ خودتان
+manifestPlaceholders["defaultUrl"] = "https://tizbazii.ir/"
 manifestPlaceholders["launcherName"] = "تیزبازی"
 ```
 
@@ -99,7 +99,7 @@ manifestPlaceholders["launcherName"] = "تیزبازی"
       <string name="app_name">تیزبازی</string>
       <string name="asset_statements" translatable="false">
           [{ \"relation\": [\"delegate_permission/common.handle_all_urls\"],
-             \"target\": {\"namespace\": \"web\", \"site\": \"https://tizbazi.example.ir\"}}]
+             \"target\": {\"namespace\": \"web\", \"site\": \"https://tizbazii.ir\"}}]
       </string>
   </resources>
   ```
@@ -127,7 +127,7 @@ Build ← Generate Signed App Bundle / APK ← **APK** (یا AAB، هر کدام
 keytool -list -v -keystore tizbazi.jks -alias key0
 ```
 مقدار `SHA256:` را کپی کنید و در `.env` سرور به‌عنوان `TWA_SHA256` بگذارید و سرور را دوباره راه بیندازید. بعد این آدرس باید همان بسته و اثرانگشت را نشان دهد:
-`https://دامنه/.well-known/assetlinks.json`
+`https://tizbazii.ir/.well-known/assetlinks.json`
 
 ### ۷. امتحان
 اپ را روی گوشی نصب کنید. اگر **نوار آدرس بالای صفحه دیده می‌شود**، یعنی تأیید دامنه نشده است: بسته، اثرانگشت یا HTTPS را بررسی کنید.
@@ -140,4 +140,4 @@ adb shell pm get-app-links ir.tizbazi.app
 APK را در پنل توسعه‌دهنده آپلود کنید. معمولاً لازم است: آیکون ۵۱۲، چند اسکرین‌شات از داخل بازی، توضیحات فارسی و لینک سیاست حریم خصوصی. (موارد دقیق را از راهنمای خود بازار هم بررسی کنید.)
 
 ## راه سریع‌تر بدون Android Studio
-`npx @bubblewrap/cli init --manifest https://دامنه/manifest.webmanifest` و بعد `npx @bubblewrap/cli build` همین پروژه را خودکار می‌سازد و فایل امضا و اثرانگشت را هم چاپ می‌کند.
+`npx @bubblewrap/cli init --manifest https://tizbazii.ir/manifest.webmanifest` و بعد `npx @bubblewrap/cli build` همین پروژه را خودکار می‌سازد و فایل امضا و اثرانگشت را هم چاپ می‌کند.

@@ -33,12 +33,8 @@ export default defineNuxtConfig({
         { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
         { rel: 'manifest', href: '/manifest.webmanifest' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&display=swap'
-        }
+        // فونت از خود سرور (بدون وابستگی به Google Fonts)
+        { rel: 'preload', href: '/fonts/vazirmatn-arabic-wght-normal.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }
       ]
     }
   }

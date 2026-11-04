@@ -58,6 +58,7 @@ async function onSubmit() {
       </label>
       <p v-if="error" class="error" role="alert">{{ error }}</p>
       <button class="btn btn-primary" :disabled="busy">{{ fa.auth.submit }}</button>
+      <p class="hint">با ادامه، <NuxtLink to="/privacy">سیاست حریم خصوصی</NuxtLink> را می‌پذیری.</p>
     </form>
   </div>
 </template>

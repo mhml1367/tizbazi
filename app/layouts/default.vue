@@ -58,6 +58,9 @@ async function onLogout() {
       </div>
     </header>
     <main class="container main" :class="{ 'in-game': route.path.startsWith('/games/') }"><slot /></main>
+    <footer v-if="!route.path.startsWith('/games/')" class="foot container">
+      <NuxtLink to="/privacy">سیاست حریم خصوصی</NuxtLink>
+    </footer>
   </div>
 </template>
 
@@ -128,6 +131,14 @@ async function onLogout() {
 }
 .top {
   padding-top: env(safe-area-inset-top, 0px);
+}
+.foot {
+  text-align: center;
+  padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
+  font-size: 14px;
+}
+.foot a {
+  color: var(--text-mid);
 }
 /* موبایل: سربرگ در یک ردیف بماند */
 @media (max-width: 560px) {

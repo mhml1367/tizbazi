@@ -1,6 +1,6 @@
 // سرویس‌ورکر تیزبازی: فایل‌های ثابت کش می‌شوند، صفحه‌ها «اول شبکه» و در قطعی صفحهٔ آفلاین.
 // API هرگز کش نمی‌شود (امتیاز و ورود باید همیشه از سرور بیایند).
-const VERSION = 'v1'
+const VERSION = 'v2'
 const STATIC = `tiz-static-${VERSION}`
 const OFFLINE = '/offline.html'
 
@@ -29,7 +29,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return
 
   // فایل‌های هش‌دار ساخت و آیکون‌ها: اول کش
-  if (url.pathname.startsWith('/_nuxt/') || url.pathname.startsWith('/icons/')) {
+  if (url.pathname.startsWith('/_nuxt/') || url.pathname.startsWith('/icons/') || url.pathname.startsWith('/fonts/')) {
     event.respondWith(
       caches.open(STATIC).then(async (cache) => {
         const hit = await cache.match(req)
